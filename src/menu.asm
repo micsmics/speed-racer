@@ -29,12 +29,12 @@ READ_PRESSED_KEY:
 	cmp dx, VK_ENTER
 	jne DRAW
 	
-	loop CHANGE_SCREEN
+	jmp CHANGE_SCREEN
 
 ;soma 1 no valor da posicao da seta
 ADD_POSITION:
 	add position,1
-	loop DRAW
+	jmp DRAW
 	
 ;verifica qual a opção selecionada e passa para proxima tela
 
