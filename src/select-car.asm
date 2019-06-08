@@ -1,5 +1,6 @@
 
 INCLUDE Irvine32.inc
+INCLUDE Macros.inc
 
 LENGTH_SCREEN = 168
 HEIGHT_SCREEN = 44
@@ -41,7 +42,7 @@ CarStruct ENDS
     xSelectCarLabelPosition BYTE 47
     ySelectCarLabelPosition BYTE 5
 
-    selectionCar SelectionCarStruct <0, 3, 1, NUMBER_OF_CARS-1>
+    selectionCar SelectionCarStruct <0, 0, 0, NUMBER_OF_CARS-1>
     cars CarStruct <0, 98, "9.8", 80, "8.0", 60, "6.0">, <1, 79, "7.9", 92, "9.2", 63, "6.3">, <2, 57, "5.7", 82, "8.2", 94, "9.4">, <3, 68, "6.8", 72, "7.2", 69, "6.9">
     
     car1Design  BYTE 0C9h, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0BBh, 10
@@ -135,9 +136,10 @@ CarStruct ENDS
 
 .CODE
 main PROC
+volta::
     call verifySelectedItem
     call printCarSelectionScreen
-    ;call getPressedKeys
+    call getPressedKeys
 exit
 main ENDP
 
@@ -224,6 +226,8 @@ verifySelectedItem ENDP
 ;   Nada                                                                                       ;
 ;==============================================================================================;
 printCarSelectionScreen PROC
+    call clearMatrix
+
     push edx
     push ecx
     push ebx
@@ -417,6 +421,86 @@ byPassRightPlayerSumOfCarsStructs:
 printCarSelectionScreen ENDP
 
 
+getPressedKeys PROC
+    call ReadKey
+    jz byPass
+
+    ; verifica se tá selecionado, se tiver nao faz nada
+    movsx cx, selectionCar.leftCarSelected
+    cmp cx, 1
+    je notB
+    ; verifica se apertou a
+    cmp al, 61h
+    jne notA
+    cmp selectionCar.leftCar, 0
+    jle notA
+    dec selectionCar.leftCar
+notA:
+    ; verifica se apertou d
+    cmp al, 64h
+    jne notB
+    cmp selectionCar.leftCar, NUMBER_OF_CARS-1
+    jge notB
+    inc selectionCar.leftCar
+notB:
+    ; verifica se tá selecionado, se tiver nao faz nada
+    movsx cx, selectionCar.rightCarSelected
+    cmp cx, 1
+    je notRightArrow
+    ; verifica se apertou seta esq
+    cmp ah, 4bh
+    jne notLeftArrow
+    cmp selectionCar.rightCar, 0
+    jle notLeftArrow
+    dec selectionCar.rightCar
+notLeftArrow:
+    ; verifica se apertou seta direita
+    cmp ah, 4dh
+    jne notRightArrow
+    cmp selectionCar.rightCar, NUMBER_OF_CARS-1
+    jge notRightArrow
+    inc selectionCar.rightCar
+notRightArrow:
+    ; verifica se apertou enter
+    cmp al, 0dh
+    jne notEnter
+    xor selectionCar.rightCarSelected, 00000001b
+notEnter:
+    ; verifica se apertou espaco
+    cmp al, 20h
+    jne notSpace
+    xor selectionCar.leftCarSelected, 00000001b
+notSpace:
+    ;verifica se os dois jogadores já selecionaram os carros
+    movsx ax, selectionCar.leftCarSelected
+    movsx bx, selectionCar.rightCarSelected
+    cmp ax, bx
+    jne byPass
+    cmp ax, 1
+    jne byPass
+
+    ; atualiza as flags
+
+    ret
+
+
+    mShow  al,h
+    mShow  ah,h
+    mShow  dx,h
+    mShow  ebx,hnn
+
+    ;call refreshChronometerFlag
+
+byPass:
+    jmp volta
+    ret
+getPressedKeys ENDP
+
+
+
+
+
+
 
 
 ;==============================================================================================;
@@ -496,5 +580,14 @@ STOP_COPY:
     pop edx
     ret
 insertObjectInMatrix ENDP
+
+clearMatrix PROC USES ecx
+    mov ecx, 7391; lengthScreen * heightScreen
+again:
+    mov screenMatrix[ecx], 32
+    loop again
+
+    ret
+clearMatrix ENDP
 
 END main
