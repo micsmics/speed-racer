@@ -133,15 +133,88 @@ CarStruct ENDS
     xPosInfoTableRightPlayer BYTE 119
     yPosInfoTableRightPlayer BYTE 35
     
+    menuScreenLabel BYTE "MenuScreeeeeeeeeeeeeeeeeeeeeeeeeen", 7358 DUP(" "), 0
+    chronometerScreenLabel BYTE "chronometerScreeeeeeeeeeeeeeeeeeeeeeeeeen", 7351 DUP(" "),  0
+
 
 .CODE
 main PROC
-volta::
+next:
+    ; verifica as flags
+    movzx ax, flags
+
+    ; verifica menu flag
+    bt ax, 7
+    jnc notMenuFlag
+    call menuScreen
+    jmp next
+notMenuFlag:
+
+    ; verifica selectCarFlag
+    bt ax, 6
+    jnc notSelectCarFlag
+    call selectCarScreen
+    jmp next
+notSelectCarFlag:
+
+    ; verifica pause flag
+    bt ax, 4
+    jnc notPauseFlag
+    ;call pauseScreen
+    jmp next
+notPauseFlag:
+
+    ; verifica chronometerFlag
+    bt ax, 5
+    jnc notChronometerFlag
+    call chronometerScreen
+    jmp next
+notChronometerFlag:
+
+    ; verifica racingFlag
+    bt ax, 3
+    jnc notRacingFlag
+    ;call racingScreen
+    jmp next
+notRacingFlag:
+
+    ; verifica winnerGameFlag
+    bt ax, 2
+    jnc notWinnerGameFlag
+    ;call winnerGameScreen
+    jmp next
+notWinnerGameFlag:
+
+    ; sai do jogo
+
+exit
+main ENDP
+
+
+menuScreen PROC
+    mov edx, OFFSET menuScreenLabel
+    call WriteString
+
+    ret
+menuScreen ENDP
+
+chronometerScreen PROC
+    mov edx, OFFSET chronometerScreenLabel
+    call WriteString
+
+    ret
+chronometerScreen ENDP
+
+
+
+
+
+selectCarScreen PROC
     call verifySelectedItem
     call printCarSelectionScreen
     call getPressedKeys
-exit
-main ENDP
+    ret
+selectCarScreen ENDP
 
 
 ;============================================;
@@ -433,15 +506,21 @@ getPressedKeys PROC
     cmp al, 61h
     jne notA
     cmp selectionCar.leftCar, 0
-    jle notA
+    jle leftGoToEnd
     dec selectionCar.leftCar
+    jmp notA
+leftGoToEnd:
+    mov selectionCar.leftCar, NUMBER_OF_CARS-1
 notA:
     ; verifica se apertou d
     cmp al, 64h
     jne notB
     cmp selectionCar.leftCar, NUMBER_OF_CARS-1
-    jge notB
+    jge leftGoToBegin
     inc selectionCar.leftCar
+    jmp notB
+leftGoToBegin:
+    mov selectionCar.leftCar, 0
 notB:
     ; verifica se tá selecionado, se tiver nao faz nada
     movsx cx, selectionCar.rightCarSelected
@@ -475,24 +554,19 @@ notSpace:
     movsx ax, selectionCar.leftCarSelected
     movsx bx, selectionCar.rightCarSelected
     cmp ax, bx
-    jne byPass
+    jne notBothSelected
     cmp ax, 1
+    jne notBothSelected
+    ; atualiza as flags para chronometro
+    xor flags, 01100000b    ; troco a selectCarFlag e chronometerFlag
+notBothSelected:
+    ; verifica se apertou esc
+    cmp dx, 1bh
     jne byPass
-
-    ; atualiza as flags
-
-    ret
-
-
-    mShow  al,h
-    mShow  ah,h
-    mShow  dx,h
-    mShow  ebx,hnn
-
-    ;call refreshChronometerFlag
+    ; atualiza as flags para o menu
+    xor flags, 11000000b    ; troco a menuFlag e selectCarFlag
 
 byPass:
-    jmp volta
     ret
 getPressedKeys ENDP
 
