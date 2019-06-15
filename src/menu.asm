@@ -64,13 +64,13 @@ main PROC
 exit
 main ENDP
 
-;----------------------------------
+;-----------------------------------
 ;			menu PROC
 ;estado inicial do menu do jogo
 ;Entrada: Nada
 ;Saida: Nada
 ;Requer: Nada
-;----------------------------------
+;-----------------------------------
 
 menu PROC
 
