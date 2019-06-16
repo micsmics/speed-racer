@@ -25,13 +25,16 @@ Object ENDS
     contador WORD 0
     limiteContador WORD 0
     linhaImprime DWORD 294
+	carJumpToSide WORD 2; quanto o carro vai saltar pro lado a cada vez que o botão for pressionado
+
+	pPlayer Player <>
 
     flags BYTE 00001000b
     lengthScreen WORD 168
     heightScreen WORD 44
     screenMatrix BYTE HEIGHT_SCREEN DUP(LENGTH_SCREEN DUP(" ")), 0, LENGTH_SCREEN DUP(0), LENGTH_SCREEN DUP(0)
 
-    leftPlayer Player <0, 28, 4, 0, 60>
+    leftPlayer Player <0, 28, 4, 0, 50>
     rightPlayer Player <1, 6, 82, 0, 30>
     roadObjects Object <0, 3, 20>, <1, 5, 40>, <0, 0, 60>, <2, 0, 80>
     healthString BYTE " 10", 0
@@ -157,6 +160,23 @@ Object ENDS
     yRightCarHealthPosition BYTE 28
 
 
+
+
+;**************************************************************teste
+	car4Design  BYTE 0C9h, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0BBh, 10
+                BYTE 0BAh, "       _       ", 0BAh, 10
+                BYTE 0BAh, "    0=[_]=0    ", 0BAh, 10
+                BYTE 0BAh, "      /T\      ", 0BAh, 10
+                BYTE 0BAh, "     |(o)|     ", 0BAh, 10
+                BYTE 0BAh, "   []=\_/=[]   ", 0BAh, 10
+                BYTE 0BAh, "    '-----'    ", 0BAh, 10
+                BYTE 0BAh, "               ", 0BAh, 10
+                BYTE 0C8h, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0BCh, 0
+	
+	;*******************************************************************
+
+	carTest BYTE "XXXXXX",0
+
 .CODE
 
 main PROC
@@ -169,14 +189,15 @@ main ENDP
 
 racingScreen PROC
     call printRacingScreen
-    ;call getPressedKeys
+    call getPressedKeys
     ;call verify
 
     ret
 racingScreen ENDP
 
 printRacingScreen PROC
-    call clearMatrix
+    
+	call clearMatrix
 
     mov eax, posY
     call computeRoteStartsM
@@ -190,9 +211,15 @@ printRacingScreen PROC
     call insertObjectInMatrix
 
     ; printa objetos da pista da esquerda na matriz
-
-
-
+	
+	; printa carro da esquerda
+	mov ebx, offset carTest
+	movsx ecx, leftPlayer.xPosition
+	movsx edx, leftPlayer.yPosition
+	call insertObjectInMatrix
+	
+	
+	
     ; coloca a pista da direita na matriz
     mov ebx, OFFSET roadDesign
     movsx ecx, xRightRoadPosition
@@ -200,7 +227,7 @@ printRacingScreen PROC
     call insertObjectInMatrix
 
     ; printa objetos da pista da direita na matriz
-
+	
 
 
     ; printa meio da pista
@@ -296,6 +323,9 @@ printRacingScreen PROC
     movsx ecx, xRightVelocityPosition
     movsx edx, yRightVelocityPosition
     call insertObjectInMatrix
+
+	
+
 
     ; printa
     mov edx, OFFSET screenMatrix
@@ -456,6 +486,63 @@ endSecond:
 
     ret
 velocityInIntegerToString ENDP
+
+;==============================================================================================;
+;                                    getPressedKeys PROC                                       ;
+;                 Lê as teclas pressionadas do teclado e altera os dados de cada comando       ;
+; Recebe:                                                                                      ;
+; 	  Nada                                                                                     ;
+; Retorna:                                                                                     ;
+;  	  Nada                                                                                     ;
+; Requer:                                                                                      ;
+;	  Nada                                                                                     ;
+;==============================================================================================;
+ getPressedKeys PROC
+
+	call ReadKey
+	
+	; player da esquerda
+	
+	cmp dx, VK_SPACE
+	je moveCarLeftP1
+	
+	cmp dx, 'd'
+	je moveCarRightP1
+	
+	
+	;player da direita
+
+	cmp dx, VK_LEFT
+	je moveCarLeftP2
+	
+	cmp dx, VK_RIGHT
+	je moveCarRightP2
+	
+	jmp BREAK
+moveCarLeftP1:
+	mov ax, carJumpToSide
+	sub leftPlayer.xPosition, ax
+	jmp BREAK
+moveCarRightP1:
+	mov ax, carJumpToSide
+	add leftPlayer.yPosition, ax
+	jmp BREAK
+	
+moveCarLeftP2:
+	mov ax, carJumpToSide
+	sub rightPlayer.xPosition, ax
+	jmp BREAK
+moveCarRightP2:
+	mov ax, carJumpToSide
+	add rightPlayer.yPosition, ax
+	jmp BREAK
+
+BREAK:
+	ret
+getPressedKeys ENDP
+
+
+
 
 
 
