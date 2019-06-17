@@ -25,7 +25,7 @@ Object ENDS
     contador WORD 0
     limiteContador WORD 0
     linhaImprime DWORD 294
-	carJumpToSide WORD 2; quanto o carro vai saltar pro lado a cada vez que o botão for pressionado
+	carJumpToSide WORD 4; quanto o carro vai saltar pro lado a cada vez que o botão for pressionado
 
 	pPlayer Player <>
 
@@ -34,7 +34,7 @@ Object ENDS
     heightScreen WORD 44
     screenMatrix BYTE HEIGHT_SCREEN DUP(LENGTH_SCREEN DUP(" ")), 0, LENGTH_SCREEN DUP(0), LENGTH_SCREEN DUP(0)
 
-    leftPlayer Player <0, 28, 4, 0, 50>
+    leftPlayer Player <0, 28, 4, 10, 33>
     rightPlayer Player <1, 6, 82, 0, 30>
     roadObjects Object <0, 3, 20>, <1, 5, 40>, <0, 0, 60>, <2, 0, 80>
     healthString BYTE " 10", 0
@@ -174,8 +174,7 @@ Object ENDS
                 BYTE 0C8h, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0BCh, 0
 	
 	;*******************************************************************
-
-	carTest BYTE "XXXXXX",0
+	limitSide word ?
 
 .CODE
 
@@ -213,7 +212,7 @@ printRacingScreen PROC
     ; printa objetos da pista da esquerda na matriz
 	
 	; printa carro da esquerda
-	mov ebx, offset carTest
+	mov ebx, offset car4Design
 	movsx ecx, leftPlayer.xPosition
 	movsx edx, leftPlayer.yPosition
 	call insertObjectInMatrix
@@ -228,6 +227,11 @@ printRacingScreen PROC
 
     ; printa objetos da pista da direita na matriz
 	
+	;printa carro da direita
+	mov ebx, offset car4Design
+	movsx ecx, rightPlayer.xPosition
+	movsx edx, rightPlayer.yPosition
+	call insertObjectInMatrix
 
 
     ; printa meio da pista
@@ -502,39 +506,54 @@ velocityInIntegerToString ENDP
 	call ReadKey
 	
 	; player da esquerda
+
 	
-	cmp dx, VK_SPACE
+	
+	mov ax, 4
+	mov limitSide, 2
+	cmp dx, 'A'
 	je moveCarLeftP1
 	
-	cmp dx, 'd'
+	
+	mov limitSide, 30
+	cmp dx, 'D'
 	je moveCarRightP1
 	
-	
 	;player da direita
-
+	mov limitSide, 100
 	cmp dx, VK_LEFT
 	je moveCarLeftP2
 	
+	mov limitSide, 150
 	cmp dx, VK_RIGHT
 	je moveCarRightP2
 	
 	jmp BREAK
 moveCarLeftP1:
-	mov ax, carJumpToSide
+	mov cx, limitSide
+	cmp leftPlayer.xPosition, cx
+	jbe BREAK
 	sub leftPlayer.xPosition, ax
 	jmp BREAK
 moveCarRightP1:
-	mov ax, carJumpToSide
-	add leftPlayer.yPosition, ax
+	mov cx, limitSide
+	cmp leftPlayer.xPosition, cx
+	jae BREAK
+	add leftPlayer.xPosition, ax
 	jmp BREAK
-	
+
 moveCarLeftP2:
-	mov ax, carJumpToSide
+	mov cx, limitSide
+	cmp rightPlayer.xPosition, cx
+	jbe BREAK
 	sub rightPlayer.xPosition, ax
 	jmp BREAK
+
 moveCarRightP2:
-	mov ax, carJumpToSide
-	add rightPlayer.yPosition, ax
+	mov cx, limitSide
+	cmp rightPlayer.xPosition, cx
+	jae BREAK
+	add rightPlayer.xPosition, ax
 	jmp BREAK
 
 BREAK:
