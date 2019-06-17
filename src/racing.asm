@@ -25,7 +25,7 @@ Object ENDS
     contador WORD 0
     limiteContador WORD 0
     linhaImprime DWORD 294
-	carJumpToSide WORD 2; quanto o carro vai saltar pro lado a cada vez que o botão for pressionado
+	carJumpToSide WORD 2 ; quanto o carro vai saltar pro lado a cada vez que o botão for pressionado
 
 	pPlayer Player <>
 
@@ -34,11 +34,11 @@ Object ENDS
     heightScreen WORD 44
     screenMatrix BYTE HEIGHT_SCREEN DUP(LENGTH_SCREEN DUP(" ")), 0, LENGTH_SCREEN DUP(0), LENGTH_SCREEN DUP(0)
 
-    leftPlayer Player <0, 28, 4, 0, 50>
-    rightPlayer Player <1, 6, 82, 0, 30>
+    leftPlayer Player <0, 28, 4, 5, 10>
+    rightPlayer Player <1, 6, 82, 6, 20>
     roadObjects Object <0, 3, 20>, <1, 5, 40>, <0, 0, 60>, <2, 0, 80>
-    healthString BYTE " 10", 0
-    velocityString BYTE " 98", 0
+    healthString BYTE " 00", 0
+    velocityString BYTE " 00", 0
 
     roadDesign BYTE 0CCh, 0B9h, 0BAh, 0BAh, 0CCh, 0B9h, "                 ", 0B1h, 0B1h, "                 ", 0CCh, 0B9h, 0BAh, 0BAh, 0CCh, 0B9h, 10
                BYTE 0BAh, 0BAh, 0CCh, 0B9h, 0BAh, 0BAh, "                 ", 0B1h, 0B1h, "                 ", 0BAh, 0BAh, 0CCh, 0B9h, 0BAh, 0BAh, 10
@@ -162,7 +162,7 @@ Object ENDS
 
 
 
-;**************************************************************teste
+    ;**************************************************************teste
 	car4Design  BYTE 0C9h, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0CDh, 0BBh, 10
                 BYTE 0BAh, "       _       ", 0BAh, 10
                 BYTE 0BAh, "    0=[_]=0    ", 0BAh, 10
@@ -175,7 +175,8 @@ Object ENDS
 	
 	;*******************************************************************
 
-	carTest BYTE "XXXXXX",0
+	carTest BYTE "XXXXXX",10
+            BYTE "XXXXXX",0
 
 .CODE
 
@@ -213,7 +214,7 @@ printRacingScreen PROC
     ; printa objetos da pista da esquerda na matriz
 	
 	; printa carro da esquerda
-	mov ebx, offset carTest
+	mov ebx, OFFSET carTest
 	movsx ecx, leftPlayer.xPosition
 	movsx edx, leftPlayer.yPosition
 	call insertObjectInMatrix
@@ -498,9 +499,9 @@ velocityInIntegerToString ENDP
 ;	  Nada                                                                                     ;
 ;==============================================================================================;
  getPressedKeys PROC
-
 	call ReadKey
-	
+    jz break
+
 	; player da esquerda
 	
 	cmp dx, VK_SPACE
@@ -518,26 +519,26 @@ velocityInIntegerToString ENDP
 	cmp dx, VK_RIGHT
 	je moveCarRightP2
 	
-	jmp BREAK
+	jmp break
 moveCarLeftP1:
 	mov ax, carJumpToSide
 	sub leftPlayer.xPosition, ax
-	jmp BREAK
+	jmp break
 moveCarRightP1:
 	mov ax, carJumpToSide
 	add leftPlayer.yPosition, ax
-	jmp BREAK
+	jmp break
 	
 moveCarLeftP2:
 	mov ax, carJumpToSide
 	sub rightPlayer.xPosition, ax
-	jmp BREAK
+	jmp break
 moveCarRightP2:
 	mov ax, carJumpToSide
 	add rightPlayer.yPosition, ax
-	jmp BREAK
+	jmp break
 
-BREAK:
+break:
 	ret
 getPressedKeys ENDP
 
