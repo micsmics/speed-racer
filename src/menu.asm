@@ -39,25 +39,23 @@ ENDM
 	yspeedRacerLabelPosition BYTE 5
 	speedRacerLabelColor BYTE 0Ch
 	
-	startLabel 	BYTE 60 DUP (" "), "  _________________________ _____________________",59 DUP (" ")
-                BYTE 60 DUP (" "), " /   _____/\__    ___/  _  \\______   \__    ___/",59 DUP (" ")
-                BYTE 60 DUP (" "), " \_____  \   |    | /  /_\  \|       _/ |    |   ",59 DUP (" ")
-                BYTE 60 DUP (" "), " /        \  |    |/    |    \    |   \ |    |   ",59 DUP (" ")
-                BYTE 60 DUP (" "), "/_______  /  |____|\____|__  /____|_  / |____|   ",59 DUP (" ")
-                BYTE 60 DUP (" "), "        \/                 \/       \/           ",59 DUP (" "), 0
+	startLabel	byte 65 DUP(" "), " ",0dbh,0dbh,0dbh,0dbh,"   ",0dbh,0dbh,0dbh,0dbh,0dbh,0dbh,"   ",0dbh,0dbh,0dbh,0dbh,"   ",0dbh,0dbh,0dbh,0dbh,0dbh,"   ",0dbh,0dbh,0dbh,0dbh,0dbh,0dbh,65 DUP(" ")
+				byte 65 DUP(" "),0dbh,0dbh,"        ",0dbh,0dbh,"    ",0dbh,0dbh,"  ",0dbh,0dbh,"  ",0dbh,0dbh,"  ",0dbh,0dbh,"    ",0dbh,0dbh,"  ",65 DUP(" ")
+				byte 65 DUP(" ")," ",0dbh,0dbh,0dbh,0dbh,"     ",0dbh,0dbh,"    ",0dbh,0dbh,0dbh,0dbh,0dbh,0dbh,"  ",0dbh,0dbh,0dbh,0dbh,0dbh,"     ",0dbh,0dbh,"  ",65 DUP(" ")
+				byte 65 DUP(" "),"    ",0dbh,0dbh,"    ",0dbh,0dbh,"    ",0dbh,0dbh,"  ",0dbh,0dbh,"  ",0dbh,0dbh,"  ",0dbh,0dbh,"    ",0dbh,0dbh,"  ",65 DUP(" ")
+				byte 65 DUP(" ")," ",0dbh,0dbh,0dbh,0dbh,"     ",0dbh,0dbh,"    ",0dbh,0dbh,"  ",0dbh,0dbh,"  ",0dbh,0dbh,"  ",0dbh,0dbh,"    ",0dbh,0dbh,"  ",65 DUP(" "),0
 
 	xstartLabelPosition BYTE 0
 	ystartLabelPosition BYTE 18
 	startLabelColor BYTE 2Fh
 
-	exitLabel 	BYTE "       _______________  ___.______________       ",10
-                BYTE "       \_   _____/\   \/  /|   \__    ___/       ",10
-                BYTE "        |    __)_  \     / |   | |    |          ",10
-                BYTE "        |        \ /     \ |   | |    |          ",10
-                BYTE "       /_______  //___/\  \|___| |____|          ",10
-                BYTE "               \/       \_/                      ",0
+	exitLabel	byte 69 DUP(" "),0dbh, 0dbh, 0dbh, 0dbh, 0dbh, 0dbh,"  ", 0dbh, 0dbh,"  ", 0dbh, 0dbh,"  " ,0dbh, 0dbh, 0dbh, 0dbh, 0dbh, 0dbh,"  ", 0dbh, 0dbh, 0dbh, 0dbh, 0dbh, 0dbh,69 DUP(" ") 
+				byte 69 DUP(" "),0dbh, 0dbh,"       " ,0dbh, 0dbh, 0dbh, 0dbh,"     " ,0dbh, 0dbh,"      ", 0dbh, 0dbh,"  ",69 DUP(" ")
+				byte 69 DUP(" "),0dbh, 0dbh, 0dbh, 0dbh,"      " ,0dbh, 0dbh,"      ", 0dbh, 0dbh,"      ", 0dbh, 0dbh,"  ",69 DUP(" ") 
+				byte 69 DUP(" "),0dbh, 0dbh,"       " ,0dbh, 0dbh, 0dbh, 0dbh,"     ", 0dbh, 0dbh,"      " ,0dbh, 0dbh,"  ",69 DUP(" ") 
+				byte 69 DUP(" "),0dbh, 0dbh, 0dbh, 0dbh, 0dbh, 0dbh,"  ", 0dbh, 0dbh,"  ", 0dbh, 0dbh,"  ", 0dbh, 0dbh, 0dbh, 0dbh, 0dbh, 0dbh,"    ", 0dbh, 0dbh,"  ",69 DUP(" "),0
 			
-	xexitLabelPosition BYTE 52
+	xexitLabelPosition BYTE 0
 	yexitLabelPosition BYTE 26
 	exitLabelColor BYTE 0Fh
 
@@ -104,7 +102,7 @@ READ_PRESSED_KEY:
 	
 	cmp dx, VK_DOWN
 	je ADD_POSITION
-
+	
 	cmp dx, VK_UP
 	je ADD_POSITION
 	
@@ -120,13 +118,13 @@ ADD_POSITION:
 	mov al, position
 	cmp al, 0
 	je start
-	mov startLabelColor, 2Fh
-	mov exitLabelColor, 0fh	
+	mov startLabelColor, 0fh
+	mov exitLabelColor, 2fh	
 	
 	jmp DRAW
 start:
-	mov startLabelColor, 0fh
-	mov exitLabelColor, 2Fh	
+	mov startLabelColor, 2fh
+	mov exitLabelColor, 0Fh	
 	
 	jmp DRAW
 
@@ -154,7 +152,6 @@ drawMenu PROC
 	pushObjectStack speedRacerLabel,xspeedRacerLabelPosition,yspeedRacerLabelPosition,speedRacerLabelColor
 	call insetMatrix
 	
-	
 
 ; Coloca 'Start' na matriz
 	pushObjectStack startLabel,xstartLabelPosition, ystartLabelPosition, startLabelColor
@@ -173,8 +170,14 @@ drawMenu ENDP
 
 
 
-;######################################################################
-	
+
+;---------------------------------------------------------------------------------------------
+;	insertMatrix PROC
+;insere objetos na matriz de desenho
+;Entrada: empilhar os elementos: ponteiro para o objeto, posição x, posição y e cor do desenho
+;Saida: nada
+;Requer: nada
+;----------------------------------------------------------------------------------------------
    
 insetMatrix proc
 	push ebp
@@ -223,8 +226,13 @@ EXIT_ADD:
 	ret 16
 insetMatrix endp
 
-;######################################################################
-
+;-------------------------------------------------------------
+;	ClearBuffer PROC
+;insere espaço em todos os elementos da matriz de desenho
+;Entrada: nada
+;Saida: nada
+;Requer: nada
+;-------------------------------------------------------------
 ClearBuffer PROC USES eax 
     xor eax, eax
 
