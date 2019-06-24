@@ -1,62 +1,74 @@
-<<<<<<< HEAD
+
 INCLUDE Irvine32.inc
+INCLUDE win32.inc
 
 LENGTH_SCREEN = 168
 HEIGHT_SCREEN = 44
+
+;macro para inserir dados dos objetos desenhos na pilha pra inserir na matrz
+pushObjectStack MACRO pDraw, xDraw, yDraw, colorDraw
+
+	mov eax, offset pDraw
+	push eax
+	movzx eax, xDraw
+	push eax
+	movzx eax, yDraw
+	push eax
+	movzx eax, colorDraw
+	push eax
+ENDM
 
 .DATA
 
 	lengthScreen WORD 168
     heightScreen WORD 44
-    screenMatrix BYTE HEIGHT_SCREEN DUP(LENGTH_SCREEN DUP(" ")), 0
 
 	position BYTE 0
 
-	speedRacerLabel BYTE "**************************************************************",10
-	                BYTE "*   _____                     _   _____                      *",10
-                    BYTE "*  / ____|                   | | |  __ \                     *",10
-                    BYTE "* | (___  _ __   ___  ___  __| | | |__) |__ _  ___ ___ _ __  *",10
-                    BYTE "*  \___ \| '_ \ / _ \/ _ \/ _` | |  _  // _` |/ __/ _ \ '__| *",10
-                    BYTE "*  ____) | |_) |  __/  __/ (_| | | | \ \ (_| | (_|  __/ |    *",10
-                    BYTE "* |_____/| .__/ \___|\___|\__,_| |_|  \_\__,_|\___\___|_|    *",10
-                    BYTE "*        | |                                                 *",10
-                    BYTE "*        |_|                                                 *",10               
-                    BYTE "**************************************************************",0      
-
-	xspeedRacerLabelPosition BYTE 46
+		speedRacerLabel BYTE 88 DUP ("_"),10
+						BYTE 88 DUP ("_"),10
+						BYTE "__",4 DUP(0DBh),"___",5 DUP(0DBh),"___",6 DUP(0DBh),"__",6 DUP(0DBh),"__",5 DUP(0DBh),"___________",5 DUP(0DBh),"____",4 DUP(0DBh),"____",4 DUP(0DBh),"___",4 DUP(0DBh),0DBh,0DBh,"__",4 DUP(0DBh),0DBh,"__",10
+						BYTE "_",0DBh,0DBh,"______",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"______",0DBh,0DBh,"______",0DBh,0DBh,"__",0DBh,0DBh
+						BYTE "__________",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"______",0DBh,0DBh,"__",0DBh,0DBh,"_",10
+						BYTE "__",4 DUP(0DBh),"___",4 DUP(0DBh),0DBh,"___",4 DUP(0DBh),"____",4 DUP(0DBh),"____",0DBh,0DBh,"__",0DBh,0DBh,"__________",4 DUP(0DBh),0DBh,"___",4 DUP(0DBh),0DBh,0DBh,"__",0DBh,0DBh,"______",4 DUP(0DBh),"____",4 DUP(0DBh),0DBh,"__",10
+						BYTE "_____",0DBh,0DBh,"__",0DBh,0DBh,"______",0DBh,0DBh,"______",0DBh,0DBh,"______",0DBh,0DBh,"__",0DBh,0DBh,"__________",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"______",0DBh,0DBh,"__",0DBh,0DBh,"_",10
+						BYTE "__",4 DUP(0DBh),"___",0DBh,0DBh,"______",6 DUP(0DBh),"__",6 DUP(0DBh),"__",5 DUP(0DBh),"___________",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"___",4 DUP(0DBh),"___",4 DUP(0DBh),0DBh,0DBh,"__",0DBh,0DBh,"__",0DBh,0DBh,"_",10
+						BYTE 88 DUP ("_"),0
+	
+	xspeedRacerLabelPosition BYTE 40
 	yspeedRacerLabelPosition BYTE 5
+	speedRacerLabelColor BYTE 0Ch
+	
+	startLabel 	BYTE 60 DUP (" "), "  _________________________ _____________________",59 DUP (" ")
+                BYTE 60 DUP (" "), " /   _____/\__    ___/  _  \\______   \__    ___/",59 DUP (" ")
+                BYTE 60 DUP (" "), " \_____  \   |    | /  /_\  \|       _/ |    |   ",59 DUP (" ")
+                BYTE 60 DUP (" "), " /        \  |    |/    |    \    |   \ |    |   ",59 DUP (" ")
+                BYTE 60 DUP (" "), "/_______  /  |____|\____|__  /____|_  / |____|   ",59 DUP (" ")
+                BYTE 60 DUP (" "), "        \/                 \/       \/           ",59 DUP (" "), 0
 
-	startLabel 	BYTE "  _________________________ _____________________",10
-                BYTE " /   _____/\__    ___/  _  \\______   \__    ___/",10
-                BYTE " \_____  \   |    | /  /_\  \|       _/ |    |   ",10
-                BYTE " /        \  |    |/    |    \    |   \ |    |   ",10
-                BYTE "/_______  /  |____|\____|__  /____|_  / |____|   ",10
-                BYTE "        \/                 \/       \/           ",0
-
-	xstartLabelPosition BYTE 52
+	xstartLabelPosition BYTE 0
 	ystartLabelPosition BYTE 18
+	startLabelColor BYTE 2Fh
 
-	exitLabel 	BYTE "_______________  ___.______________",10
-                BYTE "\_   _____/\   \/  /|   \__    ___/",10
-                BYTE " |    __)_  \     / |   | |    |   ",10
-                BYTE " |        \ /     \ |   | |    |   ",10
-                BYTE "/_______  //___/\  \|___| |____|   ",10
-                BYTE "        \/       \_/             	 ",0
+	exitLabel 	BYTE "       _______________  ___.______________       ",10
+                BYTE "       \_   _____/\   \/  /|   \__    ___/       ",10
+                BYTE "        |    __)_  \     / |   | |    |          ",10
+                BYTE "        |        \ /     \ |   | |    |          ",10
+                BYTE "       /_______  //___/\  \|___| |____|          ",10
+                BYTE "               \/       \_/                      ",0
 			
-	xexitLabelPosition BYTE 59
+	xexitLabelPosition BYTE 52
 	yexitLabelPosition BYTE 26
-
-	setaLabel	BYTE "             __   ",10
-                BYTE "             \ \  ",10
-                BYTE "  ______ _____\ \ ",10
-                BYTE " |______|______> >",10
-                BYTE "              / / ",10
-                BYTE "             /_/  ",0
-
-	xsetaLabelPosition BYTE 27
-	ysetaLabelPosition BYTE 18
+	exitLabelColor BYTE 0Fh
 
 
+console HANDLE 0
+beforeBuffer CHAR_INFO 9 DUP(LENGTH_SCREEN DUP(<<" ">,0Fh>))
+buffer CHAR_INFO LENGTH_SCREEN * HEIGHT_SCREEN DUP (<<'-'>, 0Fh>)
+afterBuffer CHAR_INFO  2 DUP(LENGTH_SCREEN DUP(<<0>,0Fh>))
+bufferSize COORD <LENGTH_SCREEN, HEIGHT_SCREEN>
+bufferCoord COORD <0, 0>
+region SMALL_RECT <0, 0, LENGTH_SCREEN-1, HEIGHT_SCREEN-1>
 
 .CODE
 
@@ -74,6 +86,9 @@ main ENDP
 ;-----------------------------------
 
 menu PROC
+
+	INVOKE GetStdHandle, STD_OUTPUT_HANDLE
+    mov console, eax    ; save console handle
 
 DRAW:
 	call drawMenu
@@ -103,11 +118,18 @@ ADD_POSITION:
 	add position,1
 	AND position, 00000001b
 	mov al, position
-	shl al, 3
-	add al, 18
-	mov ysetaLabelPosition, al
-	jmp DRAW
+	cmp al, 0
+	je start
+	mov startLabelColor, 2Fh
+	mov exitLabelColor, 0fh	
 	
+	jmp DRAW
+start:
+	mov startLabelColor, 0fh
+	mov exitLabelColor, 2Fh	
+	
+	jmp DRAW
+
 ;verifica qual a opção selecionada e passa para proxima tela
 
 CHANGE_SCREEN:
@@ -125,380 +147,95 @@ menu ENDP
 ;----------------------------------
 
 drawMenu PROC
-	call clearMatrix
-	mov eax, OFFSET screenMatrix
+	call ClearBuffer
 
 ; Coloca titulo na matriz
-    mov ebx, OFFSET speedRacerLabel
-    movsx ecx, xspeedRacerLabelPosition
-    movsx edx, yspeedRacerLabelPosition
-    call insertObjectInMatrix
+
+	pushObjectStack speedRacerLabel,xspeedRacerLabelPosition,yspeedRacerLabelPosition,speedRacerLabelColor
+	call insetMatrix
+	
+	
 
 ; Coloca 'Start' na matriz
-    mov ebx, OFFSET startLabel
-    movsx ecx, xstartLabelPosition
-    movsx edx, ystartLabelPosition
-    call insertObjectInMatrix
+	pushObjectStack startLabel,xstartLabelPosition, ystartLabelPosition, startLabelColor
+    call insetMatrix
 	
 ; Coloca 'Exit' na matriz
-    mov ebx, OFFSET exitLabel
-    movsx ecx, xexitLabelPosition
-    movsx edx, yexitLabelPosition
-    call insertObjectInMatrix
-
-;Coloca a 'Seta' na matriz
-	mov ebx, OFFSET setaLabel
-    movsx ecx, xsetaLabelPosition
-    movsx edx, ysetaLabelPosition
-    call insertObjectInMatrix
+	pushObjectStack exitLabel, xexitLabelPosition, yexitLabelPosition, exitLabelColor
+    call insetMatrix
 
 ; printa
-    mov edx, OFFSET screenMatrix
-	call WriteString
+    invoke WriteConsoleOutput, console, 
+           ADDR buffer, bufferSize, bufferCoord, ADDR region
     ret
 
 drawMenu ENDP
 
 
-;==============================================================================================;
-;                                    insertObjectInMatrix PROC                                 ;
-;                 Recebe um objeto e uma posicao e desenha o objeto na matriz                  ;
-; Recebe:                                                                                      ;
-;   EBX - Endereco para o desenho do objeto                                                    ;
-;   ECX - Posicao do objeto no eixo x                                                          ;
-;   EDX - Posicao  do objeto no eixo y                                                         ;
-; Retorna:                                                                                     ;
-;    Nada                                                                                      ;
-; Requer:                                                                                      ;
-;   O final de cada linha do desenho do objeto deve terminar com o caracter referente ao       ;
-;   LF (Line feed), equivalente ao numero 10 em decimal.                                       ;
-;==============================================================================================;
 
-insertObjectInMatrix PROC
-    
-    push edx
-    push ecx
-    mov ecx, edx
-    mov edx, 0 
+;######################################################################
+	
+   
+insetMatrix proc
+	push ebp
+	mov ebp, esp
+	mov ecx,1
 
-MULT:
-    push ecx
-    movsx ecx, lengthScreen
-    add edx, ecx
-    pop ecx
-    loop MULT
+	movsx eax, byte ptr[ebp + 12] 	;eax = ydesenho
+	dec eax				;eax = ydesenho -1
+	imul lengthScreen		;ax = (ydesenho - 1) * lengthScreen
+	mov ebx, dword ptr[ebp + 16] 	;ebx = xdesenho
+	add eax, ebx			
+	mov esi, eax			;esi contém o índice para onde o objeto será inserido na matriz
+	
+	mov ebx, dword ptr [ebp + 20] ;ebx = endereço do inicio do desenho
+	
+	mov edx, dword ptr [ebp +8]  		  ;edx contem a cor do caracter e do fundo
 
-    ; ate aqui edx tem lengthScreen * yObjectPosition
-    pop ecx ; xObjectPosition
+VERIFY_BYTE:
+	movzx ax, byte ptr[ebx]	  			  ;al = contem o byte do desenho apontado por ebx
+	cmp ax, 0					  ;verifica se chegou no fim do desenho
+	je EXIT_ADD
+	
+	cmp ax, 0Ah					  ;verifica se chegou no final da linha do desenho
+	je NEXT_LINE				  ; se chegou no final da linha pula pra proxima linha da matriz
+	
+	cmp ax, 32h					  ;verifica se é espaço, se for não substitui
+	je ADD_INDEX
 
-    mov esi, 0 ; largura do objeto
 COPY_TO_MATRIX:
-    ; loop para ir colocando os valores do design do objeto ebx
-    mov al, [ebx] 
-    mov ah, screenMatrix[edx + ecx]
-    inc ebx
-    
-    cmp al, 10
-
-    JE GO_TO_NEXT_LINE
-    JNE VERIFY_IF_ZERO
-
-GO_TO_NEXT_LINE:
-    ; pula para proxima linha na matriz e subtrai largura objeto
-    movsx eax, lengthScreen 
-    sub eax, esi
-    mov esi, eax
-    add edx, esi 
-
-    mov esi, 0
-    JMP COPY_TO_MATRIX    
-VERIFY_IF_ZERO:
-    cmp al, 0
-    JE STOP_COPY
-    JNE VERIFY_AH
-VERIFY_AH:
-    cmp ah, 0
-
-    JE STOP_COPY
-        
-    ; verifica se eh espaco, se for eu nem substituo
-    cmp al, 32 
-    
-    JE IS_SPACE
-    mov screenMatrix[edx + ecx], al
-
-IS_SPACE:
+	
+	mov buffer[esi*CHAR_INFO].Char, ax
+	mov buffer[esi*CHAR_INFO].Attributes, dx
+	jmp ADD_INDEX
+NEXT_LINE:
+	movsx edi, lengthScreen 
+	sub edi, ecx
+	add esi, edi		;adiciona indice da proxima linha na matriz		
+	mov ecx,0
+ADD_INDEX:	
 	inc esi
-    inc ecx
-    
-    JMP COPY_TO_MATRIX
-    
-STOP_COPY:
+	inc ebx
+	inc ecx
+	jmp VERIFY_BYTE
+EXIT_ADD:
+	pop ebp
+	ret 16
+insetMatrix endp
 
-    pop edx
-    ret
-insertObjectInMatrix ENDP
+;######################################################################
 
+ClearBuffer PROC USES eax 
+    xor eax, eax
 
-clearMatrix PROC USES ecx
-    mov ecx, 7391; lengthScreen * heightScreen
-again:
-    mov screenMatrix[ecx], 32
-    loop again
+BLANKS:  
+    mov buffer[eax * CHAR_INFO].Char, ' '
+    inc eax
+    cmp eax, HEIGHT_SCREEN * LENGTH_SCREEN
+    jl BLANKS
 
-    ret
-clearMatrix ENDP
-
-=======
-INCLUDE Irvine32.inc
-
-LENGTH_SCREEN = 168
-HEIGHT_SCREEN = 44
-
-.DATA
-
-	lengthScreen WORD 168
-    heightScreen WORD 44
-    screenMatrix BYTE HEIGHT_SCREEN DUP(LENGTH_SCREEN DUP(" ")), 0
-
-	position BYTE 0
-
-	speedRacerLabel BYTE "**************************************************************",10
-	                BYTE "*   _____                     _   _____                      *",10
-                    BYTE "*  / ____|                   | | |  __ \                     *",10
-                    BYTE "* | (___  _ __   ___  ___  __| | | |__) |__ _  ___ ___ _ __  *",10
-                    BYTE "*  \___ \| '_ \ / _ \/ _ \/ _` | |  _  // _` |/ __/ _ \ '__| *",10
-                    BYTE "*  ____) | |_) |  __/  __/ (_| | | | \ \ (_| | (_|  __/ |    *",10
-                    BYTE "* |_____/| .__/ \___|\___|\__,_| |_|  \_\__,_|\___\___|_|    *",10
-                    BYTE "*        | |                                                 *",10
-                    BYTE "*        |_|                                                 *",10               
-                    BYTE "**************************************************************",0      
-
-	xspeedRacerLabelPosition BYTE 46
-	yspeedRacerLabelPosition BYTE 5
-
-	startLabel 	BYTE "  _________________________ _____________________",10
-                BYTE " /   _____/\__    ___/  _  \\______   \__    ___/",10
-                BYTE " \_____  \   |    | /  /_\  \|       _/ |    |   ",10
-                BYTE " /        \  |    |/    |    \    |   \ |    |   ",10
-                BYTE "/_______  /  |____|\____|__  /____|_  / |____|   ",10
-                BYTE "        \/                 \/       \/           ",0
-
-	xstartLabelPosition BYTE 52
-	ystartLabelPosition BYTE 18
-
-	exitLabel 	BYTE "_______________  ___.______________",10
-                BYTE "\_   _____/\   \/  /|   \__    ___/",10
-                BYTE " |    __)_  \     / |   | |    |   ",10
-                BYTE " |        \ /     \ |   | |    |   ",10
-                BYTE "/_______  //___/\  \|___| |____|   ",10
-                BYTE "        \/       \_/             	 ",0
-			
-	xexitLabelPosition BYTE 59
-	yexitLabelPosition BYTE 26
-
-	setaLabel	BYTE "             __   ",10
-                BYTE "             \ \  ",10
-                BYTE "  ______ _____\ \ ",10
-                BYTE " |______|______> >",10
-                BYTE "              / / ",10
-                BYTE "             /_/  ",0
-
-	xsetaLabelPosition BYTE 27
-	ysetaLabelPosition BYTE 18
+    ret       
+ClearBuffer ENDP
 
 
-
-.CODE
-
-main PROC
-    call menu
-exit
-main ENDP
-
-;-----------------------------------
-;			menu PROC
-;estado inicial do menu do jogo
-;Entrada: Nada
-;Saida: Nada
-;Requer: Nada
-;-----------------------------------
-
-menu PROC
-
-DRAW:
-	call drawMenu
-
-READ_PRESSED_KEY:
-;verificar se precisa coloca delay entre as leituras
-	
-	mov  eax, 10; delay 1 sec
-	call Delay
-
-	call ReadKey
-	jz READ_PRESSED_KEY
-	
-	cmp dx, VK_DOWN
-	je ADD_POSITION
-
-	cmp dx, VK_UP
-	je ADD_POSITION
-	
-	cmp dx, VK_SPACE
-	jne DRAW
-	
-	jmp CHANGE_SCREEN
-
-;soma 1 no valor da posicao da seta
-ADD_POSITION:
-	add position,1
-	AND position, 00000001b
-	mov al, position
-	shl al, 3
-	add al, 18
-	mov ysetaLabelPosition, al
-	jmp DRAW
-	
-;verifica qual a opção selecionada e passa para proxima tela
-
-CHANGE_SCREEN:
-	cmp position, 0
-	;call proximatela ;************************ CHAMA SELECTCAR AQUI***********************************
-	ret
-menu ENDP
-
-;----------------------------------
-;			drawMenu PROC
-;desenha tela do menu
-;Entrada: Nada
-;Saida: Nada
-;Requer: position
-;----------------------------------
-
-drawMenu PROC
-	call clearMatrix
-	mov eax, OFFSET screenMatrix
-
-; Coloca titulo na matriz
-    mov ebx, OFFSET speedRacerLabel
-    movsx ecx, xspeedRacerLabelPosition
-    movsx edx, yspeedRacerLabelPosition
-    call insertObjectInMatrix
-
-; Coloca 'Start' na matriz
-    mov ebx, OFFSET startLabel
-    movsx ecx, xstartLabelPosition
-    movsx edx, ystartLabelPosition
-    call insertObjectInMatrix
-	
-; Coloca 'Exit' na matriz
-    mov ebx, OFFSET exitLabel
-    movsx ecx, xexitLabelPosition
-    movsx edx, yexitLabelPosition
-    call insertObjectInMatrix
-
-;Coloca a 'Seta' na matriz
-	mov ebx, OFFSET setaLabel
-    movsx ecx, xsetaLabelPosition
-    movsx edx, ysetaLabelPosition
-    call insertObjectInMatrix
-
-; printa
-    mov edx, OFFSET screenMatrix
-	call WriteString
-    ret
-
-drawMenu ENDP
-
-
-;==============================================================================================;
-;                                    insertObjectInMatrix PROC                                 ;
-;                 Recebe um objeto e uma posicao e desenha o objeto na matriz                  ;
-; Recebe:                                                                                      ;
-;   EBX - Endereco para o desenho do objeto                                                    ;
-;   ECX - Posicao do objeto no eixo x                                                          ;
-;   EDX - Posicao  do objeto no eixo y                                                         ;
-; Retorna:                                                                                     ;
-;    Nada                                                                                      ;
-; Requer:                                                                                      ;
-;   O final de cada linha do desenho do objeto deve terminar com o caracter referente ao       ;
-;   LF (Line feed), equivalente ao numero 10 em decimal.                                       ;
-;==============================================================================================;
-
-insertObjectInMatrix PROC
-    
-    push edx
-    push ecx
-    mov ecx, edx
-    mov edx, 0 
-
-MULT:
-    push ecx
-    movsx ecx, lengthScreen
-    add edx, ecx
-    pop ecx
-    loop MULT
-
-    ; ate aqui edx tem lengthScreen * yObjectPosition
-    pop ecx ; xObjectPosition
-
-    mov esi, 0 ; largura do objeto
-COPY_TO_MATRIX:
-    ; loop para ir colocando os valores do design do objeto ebx
-    mov al, [ebx] 
-    mov ah, screenMatrix[edx + ecx]
-    inc ebx
-    
-    cmp al, 10
-
-    JE GO_TO_NEXT_LINE
-    JNE VERIFY_IF_ZERO
-
-GO_TO_NEXT_LINE:
-    ; pula para proxima linha na matriz e subtrai largura objeto
-    movsx eax, lengthScreen 
-    sub eax, esi
-    mov esi, eax
-    add edx, esi 
-
-    mov esi, 0
-    JMP COPY_TO_MATRIX    
-VERIFY_IF_ZERO:
-    cmp al, 0
-    JE STOP_COPY
-    JNE VERIFY_AH
-VERIFY_AH:
-    cmp ah, 0
-
-    JE STOP_COPY
-        
-    ; verifica se eh espaco, se for eu nem substituo
-    cmp al, 32 
-    
-    JE IS_SPACE
-    mov screenMatrix[edx + ecx], al
-
-IS_SPACE:
-	inc esi
-    inc ecx
-    
-    JMP COPY_TO_MATRIX
-    
-STOP_COPY:
-
-    pop edx
-    ret
-insertObjectInMatrix ENDP
-
-
-clearMatrix PROC USES ecx
-    mov ecx, 7391; lengthScreen * heightScreen
-again:
-    mov screenMatrix[ecx], 32
-    loop again
-
-    ret
-clearMatrix ENDP
-
->>>>>>> 06f5b6d451776bf71a918e5d76260f135d25d03a
 END main
