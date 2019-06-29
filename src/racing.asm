@@ -496,6 +496,7 @@ CarStruct ENDS
     delayComputeVelocityLeftCar DWORD 0
     delayComputeVelocityRightCar DWORD 0
     delayScreenFrameRate WORD 0
+
 .CODE
 
 main PROC
