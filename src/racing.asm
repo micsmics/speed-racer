@@ -15,6 +15,13 @@ HEIGHT_CAR = 6
 CAR_ACCELERATION = 5 ; o quanto de velocidade vai aumentar quando acelerado
 DELAY_SCREEN_FRAMERATE = 40 ; um contador pra atualizar menos vezes a tela e o ciclo ficar mais rápido
 
+HEIGHT_HOLE = 4
+LENGTH_HOLE = 10
+HEIGHT_NITRO = 9
+LENGTH_NITRO = 6
+
+BIGGEST_HEIGHT_ROAD_OBJECT = 9; altura do maior objeto, que é o nitro no caso
+
 ; constantes para calculo da velocidade
 DELAY_COMPUTE_VELOCITY = 5
 
@@ -85,75 +92,50 @@ CarStruct ENDS
     beforeScreenMatrix BYTE 9 DUP(LENGTH_SCREEN DUP(" "))
     screenMatrix BYTE HEIGHT_SCREEN DUP(LENGTH_SCREEN DUP(" ")), 0, LENGTH_SCREEN DUP(0), LENGTH_SCREEN DUP(0)
     ; tirar o array de carros depois, pois já está no select-car.asm
-    cars CarStruct <0, 98, "9.8", 600, "8.0", 10, "6.0", carDesign0>, <1, 79, "7.9", 60, "9.2", 63, "6.3", carDesign1>, <2, 57, "5.7", 8, "8.2", 94, "9.4", carDesign2>, <3, 68, "6.8", 7, "7.2", 69, "6.9", carDesign3>
+    cars CarStruct <0, 270, "9.8", 600, "8.0", 10, "6.0", carDesign0>, <1, 79, "7.9", 60, "9.2", 63, "6.3", carDesign1>, <2, 57, "5.7", 8, "8.2", 94, "9.4", carDesign2>, <3, 68, "6.8", 7, "7.2", 69, "6.9", carDesign3>
 
     leftPlayer Player <0, 0, 4, 0, 0>
     rightPlayer Player <1, 6, 82, 0, 0>
-    roadObjects Object <0, 0, 20>, <1, 0, 40>, <0, 5, 60>, <0, 5, 80>, <1, 5, 100>, <0, 5, 120>, <0, 5, 140>, <1, 5, 160>, <0, 5, 180>, <2, 5, 200>
-                Object <2, 7, 220>
-                Object <0, 0, 240>
+    roadObjects Object <0, 15, 20>, <1, 0, 40>, <0, 5, 60>, <0, 5, 80>, <1, 5, 100>, <0, 5, 120>, <0, 5, 140>, <1, 5, 160>, <0, 5, 180>
+                Object <0, 25, 240>
                 Object <0, 10, 260>
                 Object <1, 6, 280>
                 Object <1, 12, 300>
                 Object <1, 1, 320>
-                Object <2, 4, 340>
                 Object <0, 14, 360>
-                Object <2, 7, 380>
                 Object <0, 4, 400>
                 Object <1, 10, 420>
-                Object <2, 4, 440>
                 Object <0, 7, 460>
                 Object <1, 7, 480>
-                Object <2, 6, 500>
-                Object <2, 11, 520>
                 Object <1, 14, 540>
                 Object <0, 12, 560>
                 Object <0, 2, 580>
-                Object <2, 13, 600>
                 Object <0, 2, 620>
-                Object <2, 3, 640>
                 Object <1, 4, 660>
-                Object <2, 1, 685>
                 Object <0, 7, 696>
                 Object <1, 4, 718>
-                Object <2, 10, 730>
                 Object <0, 8, 747>
-                Object <2, 6, 763>
-                Object <2, 8, 787>
                 Object <1, 8, 800>
                 Object <0, 14, 812>
-                Object <2, 8, 831>
                 Object <1, 6, 850>
                 Object <1, 1, 871>
-                Object <2, 8, 890>
                 Object <1, 2, 917>
                 Object <0, 3, 942>
                 Object <0, 9, 949>
                 Object <0, 8, 961>
-                Object <2, 2, 978>
                 Object <1, 4, 987>
-                Object <2, 11, 1008>
                 Object <1, 13, 1033>
-                Object <2, 0, 1047>
-                Object <2, 12, 1073>
-                Object <2, 0, 1089>
-                Object <2, 4, 1099>
                 Object <0, 8, 1112>
-                Object <2, 7, 1131>
                 Object <0, 6, 1151>
                 Object <0, 1, 1162>
                 Object <1, 6, 1179>
                 Object <1, 7, 1200>
-                Object <2, 13, 1205>
                 Object <0, 7, 1234>
                 Object <1, 1, 1242>
-                Object <2, 4, 1268>
                 Object <0, 6, 1277>
                 Object <0, 14, 1303>
-                Object <2, 13, 1323>
                 Object <0, 0, 1336>
                 Object <0, 8, 1351>
-                Object <2, 2, 1369>
                 Object <1, 8, 1374>
                 Object <0, 9, 1393>
                 Object <0, 6, 1420>
@@ -164,35 +146,22 @@ CarStruct ENDS
                 Object <0, 7, 1488>
                 Object <1, 9, 1506>
                 Object <1, 1, 1518>
-                Object <2, 6, 1538>
-                Object <2, 12, 1561>
-                Object <2, 12, 1589>
-                Object <2, 12, 1615>
-                Object <2, 8, 1624>
                 Object <1, 9, 1643>
                 Object <1, 3, 1667>
                 Object <1, 11, 1695>
                 Object <0, 2, 1716>
-                Object <2, 10, 1735>
                 Object <0, 9, 1752>
                 Object <0, 7, 1761>
                 Object <1, 4, 1786>
-                Object <2, 10, 1815>
                 Object <0, 10, 1843>
                 Object <1, 7, 1853>
-                Object <2, 0, 1858>
-                Object <2, 10, 1866>
                 Object <0, 8, 1876>
-                Object <2, 7, 1904>
                 Object <0, 11, 1920>
-                Object <2, 4, 1928>
                 Object <0, 13, 1957>
                 Object <1, 0, 1964>
                 Object <1, 14, 1979>
                 Object <0, 6, 2008>
                 Object <0, 14, 2021>
-                Object <2, 9, 2031>
-                Object <2, 2, 2059>
                 Object <1, 11, 2066>
                 Object <0, 13, 2081>
                 Object <1, 13, 2087>
@@ -374,6 +343,8 @@ CarStruct ENDS
     endOfRoadObjects BYTE 0
     roadObjectsLeftPlayerPointer DWORD roadObjects
     roadObjectsRightPlayerPointer DWORD roadObjects
+    roadObjectsLeftPlayerCollisionPointer DWORD roadObjects
+    roadObjectsRightPlayerCollisionPointer DWORD roadObjects
     healthString BYTE " 00", 0
     velocityString BYTE " 00", 0
 
@@ -523,6 +494,7 @@ CarStruct ENDS
     delayBreakRightCar DWORD 0
 
     delayComputeVelocityLeftCar DWORD 0
+    delayComputeVelocityRightCar DWORD 0
     delayScreenFrameRate WORD 0
 .CODE
 
@@ -535,18 +507,21 @@ main ENDP
 
 
 racingScreen PROC
+
+    ; controla a atualização da tela de acordo com o framerate
     cmp delayScreenFrameRate, DELAY_SCREEN_FRAMERATE
     jl dontPrint
     call printRacingScreen
+    call verifyCollision ; coloquei aqui pra não ficar verificando em todos os ciclos
+    call verifyWinner ; coloquei aqui pra não ficar verificando em todos os ciclos
     mov delayScreenFrameRate, 0
 dontPrint:
     inc delayScreenFrameRate
 
     call getPressedKeys
-    call computeCarPosition3
-    ;call computeCarPositionWithConstant
-    ;call verify
-
+    call computeCarPositionLeftPlayer
+    call computeCarPositionRightPlayer
+    
     ret
 racingScreen ENDP
 
@@ -624,9 +599,9 @@ printRacingScreen PROC
     call insertObjectInMatrix
 
     ; printa carrinho da barra de posição do leftPlayer
-    mov eax, SIZEOF roadObjects
+    mov eax, OFFSET endOfRoadObjects
     sub eax, TYPE Object
-    movsx ebx, (Object PTR roadObjects[eax]).yPosition
+    movsx ebx, (Object PTR [eax]).yPosition
     movsx eax, leftPlayer.yPosition
     call computePositionCarInPositionMap ; seta o ecx
     mov ebx, OFFSET carPositionMapDesign
@@ -634,9 +609,9 @@ printRacingScreen PROC
     call insertObjectInMatrix
 
     ; printa carrinho da barra de posição do rightPlayer
-    mov eax, SIZEOF roadObjects
+    mov eax, OFFSET endOfRoadObjects
     sub eax, TYPE Object
-    movsx ebx, (Object PTR roadObjects[eax]).yPosition
+    movsx ebx, (Object PTR [eax]).yPosition
     movsx eax, rightPlayer.yPosition
     call computePositionCarInPositionMap ; seta o ecx
     mov ebx, OFFSET carPositionMapDesign
@@ -962,6 +937,16 @@ velocityInIntegerToString ENDP
  getPressedKeys PROC
 	call ReadKey
     
+    ; verifica esq pra alterar a pauseflag
+    cmp dl, 1Bh
+    jne notEsc
+    xor flags, 00010000b
+    jmp break
+notEsc:
+
+    ; converte para minusculo, se apertaram os caracteres em maiusculo
+    or al, 00100000b
+
     ; verifica se apertou a
     cmp al, 61h
     jne notA
@@ -972,12 +957,12 @@ velocityInIntegerToString ENDP
 notA:
     ; verifica se apertou d
     cmp al, 64h
-    jne notB
+    jne notD
     add leftPlayer.xPosition, CAR_JUMP_TO_SIDE
     cmp leftPlayer.xPosition, LENGTH_ROAD - LENGTH_CAR + 2
-    jl notB
+    jl notD
     mov leftPlayer.xPosition, LENGTH_ROAD - LENGTH_CAR + 2
-notB:
+notD:
     ; verifica se apertou s
     cmp al, 73h
     jne notS
@@ -999,12 +984,18 @@ notS:
 
     add eax, ebx
     mov ebx, (CarStruct PTR [eax]).limitAccelerationDelay
+    mov esi, eax
     pop eax
     cmp ecx, ebx
     jle incrementDelayLeftCar
     add leftPlayer.velocity, CAR_ACCELERATION
     ; verificar velocidade maxima
+    movsx ebx, (CarStruct PTR [esi]).maxVelocity
+    movsx ecx, leftPlayer.velocity
+    cmp ecx, ebx
     mov delayAccelerationLeftCar, 0
+    jle incrementDelayLeftCar
+    mov leftPlayer.velocity, bx
 incrementDelayLeftCar:
     inc delayAccelerationLeftCar
 dontIncreaseVelocityLeftPlayer:
@@ -1036,8 +1027,6 @@ notRightArrow:
     mov rightPlayer.velocity, 0
 rightPlayerVelocityGreaterThenZero:
     jmp dontIncreaseVelocityRightPlayer
-decrementDelayRightCar:
-    dec delayAccelerationRightCar
 notDownArrow:
     mov ecx, delayAccelerationRightCar
     push eax
@@ -1048,78 +1037,24 @@ notDownArrow:
 
     add eax, ebx
     mov ebx, (CarStruct PTR [eax]).limitAccelerationDelay
+    mov esi, eax
     pop eax
     cmp ecx, ebx
     jle incrementDelayRightCar
     add rightPlayer.velocity, CAR_ACCELERATION
     ; verificar velocidade maxima
+    movsx ebx, (CarStruct PTR [esi]).maxVelocity
+    movsx ecx, rightPlayer.velocity
+    cmp ecx, ebx
     mov delayAccelerationRightCar, 0
+    jle incrementDelayRightCar
+    mov rightPlayer.velocity, bx
 incrementDelayRightCar:
     inc delayAccelerationRightCar
 dontIncreaseVelocityRightPlayer:
 
-; 	; player da esquerda
-;     add leftPlayer.yPosition, 1
-	
-	
-; 	mov ax, 4
-; 	mov limitSide, 2
-; 	cmp dx, 'A'
-; 	je moveCarLeftP1
-	
-	
-; 	mov limitSide, 30
-; 	cmp dx, 'D'
-; 	je moveCarRightP1
-	
-; 	;player da direita
-; 	mov limitSide, 100
-; 	cmp dx, VK_LEFT
-; 	je moveCarLeftP2
-	
-; 	mov limitSide, 150
-; 	cmp dx, VK_RIGHT
-; 	je moveCarRightP2
-	
-; 	jmp BREAK
-; moveCarLeftP1:
-; 	mov cx, limitSide
-; 	cmp leftPlayer.xPosition, cx
-; 	jbe BREAK
-; 	sub leftPlayer.xPosition, ax
-; 	jmp BREAK
-; moveCarRightP1:
-; 	mov cx, limitSide
-; 	cmp leftPlayer.xPosition, cx
-; 	jae BREAK
-; 	add leftPlayer.xPosition, ax
-; 	jmp BREAK
 
-; moveCarLeftP2:
-; 	mov cx, limitSide
-; 	cmp rightPlayer.xPosition, cx
-; 	jbe BREAK
-; 	sub rightPlayer.xPosition, ax
-; 	jmp BREAK
-
-; moveCarRightP2:
-; 	mov cx, limitSide
-; 	cmp rightPlayer.xPosition, cx
-; 	jae BREAK
-; 	add rightPlayer.xPosition, ax
-; 	jmp BREAK
-
-
-; verificar esq pra alterar a pauseflag
-
-BREAK:
-    ; verifica aceleração
-    ; atualiza velocidade
-    ; leftPlayer
-     
-    
-
-
+break:
 	ret
 getPressedKeys ENDP
 
@@ -1177,7 +1112,7 @@ computeCarPosition2 ENDP
 
 
 
-computeCarPosition3 PROC
+computeCarPositionLeftPlayer PROC
     ;S = So + V.T
     ; calcula a posição do carro da esquerda
     
@@ -1249,38 +1184,6 @@ greaterThan260:
     idiv ebx
 
     add eax, 90
-    
-
-    ;cmp eax, 100
-    ;jl lessThan100
-
-    ;cmp eax, 150
-    ;jae greaterThan150
-    ; calcula x/-5+60
-;     cdq
-;     mov ebx, -5
-;     idiv ebx
-
-;     add eax, 20
-;     mov eax, 20
-;     cmp delayComputeVelocityLeftCar, eax
-;     jl break
-;     inc leftPlayer.yPosition
-;     mov delayComputeVelocityLeftCar, 0
-;     jmp break
-; ; greaterThan150:
-
-
-; lessThan100:
-;     ; calcula x/-5+60
-;     mov ebx, -3
-;     imul ebx
-
-;     add eax, 100
-;     cmp delayComputeVelocityLeftCar, eax
-;     jl break
-;     inc leftPlayer.yPosition
-;     mov delayComputeVelocityLeftCar, 0
 
 compareWithDelay:
     cmp delayComputeVelocityLeftCar, eax
@@ -1290,7 +1193,92 @@ compareWithDelay:
 break:
 	inc delayComputeVelocityLeftCar
     ret
-computeCarPosition3 ENDP
+computeCarPositionLeftPlayer ENDP
+
+
+computeCarPositionRightPlayer PROC
+    ;S = So + V.T
+    ; calcula a posição do carro da esquerda
+    
+    movsx eax, rightPlayer.velocity
+    cmp eax, 0
+    jle break
+    cmp eax, 60
+    jge greaterThan60
+    ; entre 1 - 60 km/h => -17/10*x + 302
+    mov ebx, -17
+    imul ebx
+
+    mov ebx, 10
+    cdq
+    idiv ebx
+
+    add eax, 320
+    
+    jmp compareWithDelay
+greaterThan60:
+    cmp eax, 100
+    jge greaterThan100
+    ; entre 60 - 100 km/h => -5/2*x + 350
+    mov ebx, -5
+    imul ebx
+
+    mov ebx, 2
+    cdq
+    idiv ebx
+
+    add eax, 350
+
+    jmp compareWithDelay
+greaterThan100:
+    cmp eax, 180
+    jge greaterThan180
+    ; entre 100 - 180 km/h => -5/8*x + 163
+    mov ebx, -5
+    imul ebx
+
+    mov ebx, 8
+    cdq
+    idiv ebx
+
+    add eax, 163
+
+    jmp compareWithDelay
+greaterThan180:
+    cmp eax, 260
+    jge greaterThan260
+    ; entre 180 - 260 km/h => -5/16*x + 106
+    mov ebx, -5
+    imul ebx
+
+    mov ebx, 16
+    cdq
+    idiv ebx
+
+    add eax, 106
+
+    jmp compareWithDelay
+greaterThan260:
+    ; entre 260 - 280 km/h => -1/4*x + 90
+    mov ebx, -1 ; não estou usando neg pra deixar todos os ifs com o mesmo processamento, e ficar o mais linear possivel
+    imul ebx
+
+    mov ebx, 4
+    cdq
+    idiv ebx
+
+    add eax, 90
+
+compareWithDelay:
+    cmp delayComputeVelocityRightCar, eax
+    jl break
+    inc rightPlayer.yPosition
+    mov delayComputeVelocityRightCar, 0
+break:
+	inc delayComputeVelocityRightCar
+    ret
+computeCarPositionRightPlayer ENDP
+
 
 
 computeCarPositionWithConstant PROC
@@ -1359,6 +1347,113 @@ dontRefreshVelocity:
     ret
 computeCarPositionWithConstant ENDP
 
+
+
+verifyCollision PROC USES esi eax ebx ecx edx
+    mov esi, roadObjectsLeftPlayerCollisionPointer
+
+nextObject:
+    movsx eax, (Object PTR [esi]).yPosition
+    sub eax, 2 ; subtraí 2 aqui pra ignorar as duas primeiras linhas do objeto
+    movsx ebx, leftPlayer.yPosition
+    add ebx, HEIGHT_CAR - 3
+
+    sub eax, ebx ; eax = distancia entre o objeto e o carro
+
+    ; verifica qual objeto é, pra pegar os dados da altura e largura
+    movsx ecx, (Object PTR [esi]).objectType
+    cmp ecx, 1
+    jl nitroObject
+    ; hole object
+    mov ecx, LENGTH_HOLE-1
+    mov edx, HEIGHT_HOLE-2
+    jmp endObjectVerification
+nitroObject:
+    mov ecx, LENGTH_NITRO-1
+    mov edx, HEIGHT_NITRO-2
+endObjectVerification:
+
+    cmp eax, edx
+    jg break
+
+    ; chegou no primeiro elemento que tá à frente do carro
+    ; o elemento está em uma altura próxima à do carro ou já passou do carro
+    ; verifica se o elemento já passou do carro
+    cmp eax, -HEIGHT_CAR + 3
+    jl incrementPointer ; objeto já passou pelo carro
+
+    ; objeto ainda não passou pelo carro, tá na altura do carro 
+    ; (colidiu em y, agora é só verificar em x)
+    ; verifica colisão
+    movsx ebx, leftPlayer.xPosition
+    movsx eax, (Object PTR [esi]).xPosition
+    sub ebx, eax
+    cmp ebx, 0
+    jge verifyObjectLength ; (carro está à direita do objeto)
+    ; verifyCarLength (carro está à esquerda do objeto)
+    neg ebx
+    cmp ebx, LENGTH_CAR-1
+    jge break 
+    jmp endOfCollisionVerification   
+verifyObjectLength:
+    ; ebx tem a distancia em modulo
+    cmp ebx, ecx
+    jg break
+endOfCollisionVerification:
+
+    ; colidiu
+    ; verifica se é buraco ou nitro
+    movsx ecx, (Object PTR [esi]).objectType
+    cmp ecx, 1
+    jl nitroCollidedObject
+    ; consequencia da colisão com o buraco
+    sub leftPlayer.health, HOLE_DAMAGE
+nitroCollidedObject:
+    ; consequencia da colisão com o nitro
+    mov ecx, LENGTH_NITRO-1
+    mov edx, HEIGHT_NITRO
+endObjectCollision:
+
+    
+    
+    mov ebx, 0
+    add eax, TYPE Object
+    jmp break
+    jmp nextObject
+
+
+incrementPointer:
+    add esi, TYPE Object
+    mov roadObjectsLeftPlayerCollisionPointer, esi
+
+
+break:
+    ret
+verifyCollision ENDP
+
+
+
+verifyWinner PROC
+    ; pega a posição em y do último elemento, a linha de chegada
+    mov eax, OFFSET endOfRoadObjects
+    sub eax, TYPE Object
+    movsx ebx, (Object PTR [eax]).yPosition
+    sub ebx, HEIGHT_CAR
+
+    ; verifica se o jogador da esquerda ou da direita ganhou
+    cmp leftPlayer.yPosition, bx
+    jl verifyRightPlayer
+    jmp refreshFlag
+verifyRightPlayer:
+    cmp rightPlayer.yPosition, bx
+    jl break
+    
+refreshFlag:
+    xor flags, 00000100b
+    
+break:
+    ret
+verifyWinner ENDP
 
 
 
